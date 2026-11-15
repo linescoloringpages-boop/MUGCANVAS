@@ -80,6 +80,7 @@
         .dl-tr { right: 0; top: 0; transform: translate(50%, -50%); cursor: nesw-resize; }
         .dl-bl { left: 0; bottom: 0; transform: translate(-50%, 50%); cursor: nesw-resize; }
         .dl-br { right: 0; bottom: 0; transform: translate(50%, 50%); cursor: nwse-resize; }
+    .hero-mug img { mix-blend-mode: multiply; transition: opacity 1.8s ease-in-out; object-fit: contain; }
     </style>
 </head>
 <body class="bg-white text-gray-900 min-h-screen settings-loading">
@@ -101,7 +102,6 @@
                 <a href="#ideas" class="hover:text-rose-600 transition-colors">Ideas</a>
                 <a href="#reviews" class="hover:text-rose-600 transition-colors">Reviews</a>
                 <a href="#faq" class="hover:text-rose-600 transition-colors">FAQ</a>
-                <a href="#mission" class="hover:text-rose-600 transition-colors">Why us</a>
                 <a href="#contact" id="navContactLink" onclick="scrollToContact(event)" class="hover:text-rose-600 transition-colors">Contact</a>
             </nav>
             <div class="flex items-center gap-3">
@@ -133,10 +133,10 @@
             </div>
             <div class="relative">
                 <div class="absolute inset-0 -z-0 rounded-[2.5rem] bg-gradient-to-br from-rose-50 via-white to-orange-50 border border-gray-100"></div>
-                <div class="relative grid grid-cols-3 gap-2 sm:gap-4 p-4 sm:p-8 items-end">
-                    <img src="mugs/blue-11-right.jpg" style="mix-blend-mode:multiply" alt="Custom mug with a blue handle" class="w-full rounded-2xl" loading="eager">
-                    <img src="mugs/yellow-11-right.jpg" style="mix-blend-mode:multiply" alt="Custom mug with a yellow handle" class="w-full rounded-2xl -translate-y-4 sm:-translate-y-8" loading="eager">
-                    <img src="mugs/green-11-left.jpg" style="mix-blend-mode:multiply" alt="Custom mug with a green handle" class="w-full rounded-2xl" loading="eager">
+                <div class="relative grid grid-cols-3 gap-2 sm:gap-4 p-4 sm:p-8 items-end" id="heroMugs">
+                    <div class="hero-mug relative w-full aspect-square" data-side="right"><img src="mugs/blue-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
+                    <div class="hero-mug relative w-full aspect-square" style="top:-1.75rem" data-side="right"><img src="mugs/yellow-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
+                    <div class="hero-mug relative w-full aspect-square" data-side="left"><img src="mugs/green-11-left.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
                 </div>
             </div>
         </section>
@@ -277,7 +277,7 @@
     </div>
 
     <!-- Mission Section -->
-    <section id="mission" class="bg-slate-900 text-white py-20">
+    <section id="mission" class="hidden bg-slate-900 text-white py-20" style="display:none">
         <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
             <span id="txt_missionTag" class="text-xs font-extrabold uppercase tracking-widest bg-slate-800 text-rose-200 px-3 py-1 rounded-full">Why MugCanvas</span>
             <h2 id="txt_missionTitle" class="text-3xl sm:text-4xl font-extrabold">Your idea, printed with care.</h2>
@@ -834,8 +834,8 @@
                     <div class="p-5 bg-amber-50/70 rounded-2xl border border-amber-300 space-y-3">
                         <h4 class="text-base font-extrabold text-amber-900">⭐ White Mugs Offer</h4>
                         <div class="flex flex-wrap items-end gap-4">
-                            <label class="text-xs font-bold text-gray-800 block">Discount (%) for 2+ white mugs
-                                <input type="number" id="whitePromoPercent" min="1" max="100" step="1" class="mt-1 block w-24 px-3 py-2 rounded-xl border border-gray-300 text-sm font-bold bg-white">
+                            <label class="text-xs font-bold text-gray-800 block">Price for 2 white mugs ($)
+                                <input type="number" id="whitePromoPercent" min="0.01" step="0.01" class="mt-1 block w-28 px-3 py-2 rounded-xl border border-gray-300 text-sm font-bold bg-white">
                             </label>
                             <label class="text-xs font-bold text-gray-800 block" title="The discount % applies when the order has 2 or more white mugs">Price of a single white mug ($)
                                 <input type="number" id="whitePromoSingle" min="0.01" step="0.01" class="mt-1 block w-28 px-3 py-2 rounded-xl border border-gray-300 text-sm font-bold bg-white">
@@ -1847,11 +1847,18 @@
             let pct = Number(w.percent);
             if (!isFinite(pct) || pct <= 0 || pct > 100) pct = 50;
             const kw = (typeof w.keyword === 'string' && w.keyword.trim()) ? w.keyword.trim().toLowerCase().slice(0, 40) : 'white';
-            let sp = (w.singlePrice === undefined || w.singlePrice === null || w.singlePrice === '') ? 14.99 : Number(w.singlePrice);
-            if (!isFinite(sp) || sp <= 0) sp = 14.99;
-            st.whitePromo = { percent: Math.round(pct * 100) / 100, keyword: kw, stackBulk: !!w.stackBulk, singlePrice: Math.round(sp * 100) / 100 };
+            let sp = (w.singlePrice === undefined || w.singlePrice === null || w.singlePrice === '') ? 14.90 : Number(w.singlePrice);
+            if (!isFinite(sp) || sp <= 0) sp = 14.90;
+            let pp = Number(w.pairPrice);
+            // settings saved with the old built-in offer (50% off, $14.99) move to the new one: $14.90 each, 2 for $25.20
+            if (!(pp > 0)) { if (pct === 50 && Math.round(sp * 100) === 1499) sp = 14.90; pp = 25.20; }
+            st.whitePromo = { percent: Math.round(pct * 100) / 100, keyword: kw, stackBulk: !!w.stackBulk, singlePrice: Math.round(sp * 100) / 100, pairPrice: Math.round(pp * 100) / 100 };
             (st.destinations || []).forEach(d => { d.promo = normDestPromo(d.promo, d); });
             return st;
+        }
+        function whiteDealText() {
+            const w = storeState.whitePromo || {};
+            return '2 white mugs for $' + Number(w.pairPrice > 0 ? w.pairPrice : 25.20).toFixed(2);
         }
         function promoOf(d) { return (d && d.promo && d.promo.enabled) ? d.promo : null; }
         function cartItemPromoEligible(it) {
@@ -1881,9 +1888,8 @@
         function destOptionLabel(d) {
             const pr = promoOf(d);
             if (!pr) return `${d.name} ($${Number(d.rate).toFixed(2)} Shipping)`;
-            const pct = (storeState.whitePromo && storeState.whitePromo.percent) || 50;
             const ship = pr.freeShipping ? 'Free Shipping' : `$${Number(d.rate).toFixed(2)} Shipping` + (pr.extraPerMug > 0 ? ` + $${pr.extraPerMug.toFixed(2)} per extra mug` : '');
-            return `${d.name} (${ship} · White mugs ${pct}% off)`;
+            return `${d.name} (${ship} · ${whiteDealText()})`;
         }
 
         // ================= Donations at checkout =================
@@ -2357,7 +2363,8 @@
             const dest = destName ? (dests.find(d => d.name === destName) || null) : null;
             const pr = promoOf(dest);
             const wp = storeState.whitePromo || { percent: 50, stackBulk: false };
-            const singlePrice = (wp.singlePrice > 0) ? wp.singlePrice : 14.99;
+            const singlePrice = (wp.singlePrice > 0) ? wp.singlePrice : 14.90;
+            const pairUnit = Math.round(((wp.pairPrice > 0 ? wp.pairPrice : 25.20) / 2 + 1e-9) * 100) / 100;
             // the % offer needs 2 or more white mugs; a single white mug is sold at the single-mug price
             const eligibleUnits = pr ? cartItems.reduce((s, it) => s + (cartItemPromoEligible(it) ? it.quantity : 0), 0) : 0;
             const promoSingle = !!pr && eligibleUnits === 1;
@@ -2369,7 +2376,7 @@
                     evaluatedCount++;
                     let unitPrice = item.price;
                     if (promoItem) {
-                        unitPrice = promoSingle ? Math.min(item.price, singlePrice) : Math.round((item.price * (1 - wp.percent / 100) + 1e-9) * 100) / 100;
+                        unitPrice = Math.min(item.price, promoSingle ? singlePrice : pairUnit);
                         promoAmount += item.price - unitPrice;
                         promoUnits++;
                     }
@@ -2399,7 +2406,7 @@
                 const promoCountries = (storeState.destinations || []).filter(promoOf).map(d => d.name);
                 const show = promoCountries.length > 0 && cartItems.some(cartItemPromoEligible);
                 promoHint.classList.toggle('hidden', !show);
-                if (show) promoHint.textContent = '⭐ White mugs: ' + storeState.whitePromo.percent + '% off when you buy 2 or more (a single white mug is $' + Number(storeState.whitePromo.singlePrice || 14.99).toFixed(2) + ') for ' + promoCountries.join(', ') + ' - applied at checkout when you choose that destination.';
+                if (show) promoHint.textContent = '⭐ White mugs: $' + Number(storeState.whitePromo.singlePrice || 14.90).toFixed(2) + ' each, or ' + whiteDealText() + ' (for ' + promoCountries.join(', ') + ') - applied at checkout when you choose that destination.';
             }
             const discountBanner = document.getElementById('cartDiscountBanner');
             if (discountBanner) {
@@ -2681,7 +2688,7 @@
                 if (promoAmount > 0.004) {
                     const pRow = document.createElement('div');
                     pRow.className = "flex justify-between items-center text-amber-700 font-bold";
-                    pRow.innerHTML = `<span>⭐ ${promoSingle ? 'White mug price ($' + Number(singlePrice).toFixed(2) + ' for a single white mug)' : 'White mug promo (' + promoPercent + '% off, ' + promoUnits + ' mug' + (promoUnits > 1 ? 's' : '') + ')'}:</span> <span>-$${promoAmount.toFixed(2)}</span>`;
+                    pRow.innerHTML = `<span>⭐ ${promoSingle ? 'White mug price ($' + Number(singlePrice).toFixed(2) + ' for a single white mug)' : 'White mug deal (' + whiteDealText() + ', ' + promoUnits + ' mug' + (promoUnits > 1 ? 's' : '') + ')'}:</span> <span>-$${promoAmount.toFixed(2)}</span>`;
                     summaryContainer.appendChild(pRow);
                 }
                 if (bulkAmount > 0.004) {
@@ -2696,7 +2703,7 @@
                 const eligibleInCart = cartItems.some(cartItemPromoEligible);
                 promoNote.classList.toggle('hidden', !promoActive);
                 promoNote.textContent = promoActive
-                    ? ('🎉 Promo for ' + dest.name + ': white mugs ' + promoPercent + '% off when you buy 2 or more white mugs (a single white mug is $' + Number(storeState.whitePromo.singlePrice || 14.99).toFixed(2) + ')' + (eligibleInCart ? '' : ' (add a white mug to get it)') + '. ' + (dest.promo.freeShipping ? 'Free shipping!' : (dest.promo.extraPerMug > 0 ? 'Shipping: the normal rate, plus $' + dest.promo.extraPerMug.toFixed(2) + ' for each extra mug in your order.' : '')))
+                    ? ('🎉 Promo for ' + dest.name + ': white mugs $' + Number(storeState.whitePromo.singlePrice || 14.90).toFixed(2) + ' each, or ' + whiteDealText() + (eligibleInCart ? '' : ' (add a white mug to get it)') + '. ' + (dest.promo.freeShipping ? 'Free shipping!' : (dest.promo.extraPerMug > 0 ? 'Shipping: the normal rate, plus $' + dest.promo.extraPerMug.toFixed(2) + ' for each extra mug in your order.' : '')))
                     : '';
             }
             const sh = calcShipping(dest, totalCount);
@@ -3227,6 +3234,39 @@
 
         // ---------- opening / closing the page ----------
 
+        // The three mugs at the top slowly change color, one at a time, all the time.
+        (function () {
+            var COLORS = ['blue', 'pink', 'red', 'orange', 'yellow', 'lightblue', 'maroon', 'lightgreen', 'green', 'cambridgeblue', 'black', 'white'];
+            var state = null, tick = 0;
+            function src(color, side) { return 'mugs/' + color + '-11-' + side + '.jpg'; }
+            function init() {
+                var slots = Array.prototype.slice.call(document.querySelectorAll('#heroMugs .hero-mug'));
+                if (!slots.length) return;
+                state = slots.map(function (el, k) {
+                    var a = el.querySelector('.hm-a'), b = el.querySelector('.hm-b');
+                    return { side: el.getAttribute('data-side'), front: a, back: b, idx: (k * 4) % COLORS.length };
+                });
+                COLORS.forEach(function (c) { new Image().src = src(c, 'right'); new Image().src = src(c, 'left'); });
+                if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                setInterval(step, 3500);
+            }
+            function step() {
+                if (document.hidden) return;
+                var s = state[tick % state.length]; tick++;
+                s.idx = (s.idx + 1) % COLORS.length;
+                // never show the same color twice at once
+                var guard = 0;
+                while (state.some(function (o) { return o !== s && COLORS[o.idx] === COLORS[s.idx]; }) && guard++ < COLORS.length) s.idx = (s.idx + 1) % COLORS.length;
+                var next = src(COLORS[s.idx], s.side);
+                var im = new Image();
+                im.onload = function () {
+                    s.back.src = next; s.back.style.opacity = '1'; s.front.style.opacity = '0';
+                    var t = s.front; s.front = s.back; s.back = t;
+                };
+                im.src = next;
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+        })();
         function renderStudioInfo() {
             try {
                 const box = document.getElementById('heroSwatches');
@@ -3236,7 +3276,10 @@
                     if (cols.length > 12) box.insertAdjacentHTML('beforeend', '<span class="text-xs font-bold text-gray-500 self-center">+' + (cols.length - 12) + '</span>');
                 }
                 const pr = document.getElementById('heroPrice');
-                if (pr) pr.textContent = designerEnabled() ? ('From $' + designerPrice('11').toFixed(2) + ' · 11 oz & 15 oz') : '';
+                if (pr) {
+                    const w = storeState.whitePromo || {};
+                    pr.textContent = designerEnabled() ? ('From $' + Number(w.singlePrice > 0 ? w.singlePrice : 14.90).toFixed(2) + ' · ' + whiteDealText() + ' · 11 oz & 15 oz') : '';
+                }
             } catch (e) { /* the page works without it */ }
         }
         function updateDesignerButton() {
@@ -3696,7 +3739,7 @@
                 const promoCountries = (storeState.destinations || []).filter(promoOf).map(d => d.name);
                 const show = !!col && promoCountries.length > 0 && variantPromoEligible({ name: col.name });
                 promoNote.classList.toggle('hidden', !show);
-                if (show) promoNote.textContent = '⭐ ' + col.name + ' mugs: ' + storeState.whitePromo.percent + '% off when you buy 2 or more (a single one is $' + Number(storeState.whitePromo.singlePrice || 14.99).toFixed(2) + ') for ' + promoCountries.join(', ') + ' - applied at checkout when you choose that destination.';
+                if (show) promoNote.textContent = '⭐ ' + col.name + ' mugs: $' + Number(storeState.whitePromo.singlePrice || 14.90).toFixed(2) + ' each, or ' + whiteDealText() + ' (for ' + promoCountries.join(', ') + ') - applied at checkout when you choose that destination.';
             }
             const total = designerPrice(designSize);
             ['designAddPrice', 'previewAddPrice'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '$' + (total * designQty).toFixed(2); });
@@ -4439,6 +4482,7 @@
                         promoDiscount: round2(totals.promoAmount),
                         bulkDiscount: round2(totals.bulkAmount),
                         promoPercent: totals.promoActive ? totals.promoPercent : 0,
+                        pairPrice: (storeState.whitePromo && storeState.whitePromo.pairPrice) || 25.20,
                         promoSingle: !!totals.promoSingle,
                         subtotal: round2(totals.finalSubtotal),
                         shipping: round2(shipping),
@@ -4676,7 +4720,7 @@
                     '</div>' +
                     '<div class="space-y-1 text-xs text-gray-700"><p class="font-extrabold uppercase tracking-wider text-gray-500 text-[10px]">Order</p>' + itemsHtml +
                         '<div class="pt-2 mt-1 border-t border-gray-200 space-y-0.5">' +
-                            (Number(t.promoDiscount) > 0 ? '<div class="flex justify-between text-amber-700 font-bold"><span>⭐ ' + (t.promoSingle ? 'White mug single price' : 'White mug promo (' + Number(t.promoPercent || 0) + '% off)') + '</span><span>-$' + Number(t.promoDiscount).toFixed(2) + '</span></div>' : '') +
+                            (Number(t.promoDiscount) > 0 ? '<div class="flex justify-between text-amber-700 font-bold"><span>⭐ ' + (t.promoSingle ? 'White mug single price' : 'White mug deal (2 for $' + Number(t.pairPrice || 25.20).toFixed(2) + ')') + '</span><span>-$' + Number(t.promoDiscount).toFixed(2) + '</span></div>' : '') +
                             (Number(t.discount) - Number(t.promoDiscount || 0) > 0.004 ? '<div class="flex justify-between text-emerald-700 font-bold"><span>Bulk discount</span><span>-$' + (Number(t.discount) - Number(t.promoDiscount || 0)).toFixed(2) + '</span></div>' : '') +
                             '<div class="flex justify-between"><span>Shipping' + (t.shippingNote ? ' <span class="text-[10px] font-bold text-amber-700">(' + escapeHtml(t.shippingNote) + ')</span>' : '') + '</span><span>$' + Number(t.shipping).toFixed(2) + '</span></div>' +
                             (Number(t.donation) > 0 ? '<div class="flex justify-between text-rose-700 font-bold"><span>💝 Donation (included in the total)</span><span>$' + Number(t.donation).toFixed(2) + '</span></div>' : '') +
@@ -4925,7 +4969,7 @@
                     }
                 }
             });
-            if (Number(t.promoDiscount) > 0) L.push((t.promoSingle ? 'White mug single price' : 'White mug promo (' + Number(t.promoPercent || 0) + '% off)') + ': -' + fmtMoney(t.promoDiscount));
+            if (Number(t.promoDiscount) > 0) L.push((t.promoSingle ? 'White mug single price' : 'White mug deal (2 for $' + Number(t.pairPrice || 25.20).toFixed(2) + ')') + ': -' + fmtMoney(t.promoDiscount));
             if (Number(t.discount) - Number(t.promoDiscount || 0) > 0.004) L.push('Bulk discount: -' + fmtMoney(Number(t.discount) - Number(t.promoDiscount || 0)));
             L.push('Shipping: ' + fmtMoney(t.shipping) + (t.shippingNote ? ' (' + t.shippingNote + ')' : ''));
             if (Number(t.donation) > 0) L.push('DONATION (included in the total): ' + fmtMoney(t.donation));
@@ -5148,7 +5192,7 @@
                 if (i.custom) L.push('   Your own design - we will print it exactly as you placed it.');
             });
             L.push('');
-            if (Number(t.promoDiscount) > 0) L.push((t.promoSingle ? 'White mug single price' : 'White mug promo (' + Number(t.promoPercent || 0) + '% off)') + ': -' + fmtMoney(t.promoDiscount));
+            if (Number(t.promoDiscount) > 0) L.push((t.promoSingle ? 'White mug single price' : 'White mug deal (2 for $' + Number(t.pairPrice || 25.20).toFixed(2) + ')') + ': -' + fmtMoney(t.promoDiscount));
             if (Number(t.discount) - Number(t.promoDiscount || 0) > 0.004) L.push('Bulk discount: -' + fmtMoney(Number(t.discount) - Number(t.promoDiscount || 0)));
             L.push('Shipping: ' + fmtMoney(t.shipping) + (t.shippingNote ? ' (' + t.shippingNote + ')' : ''));
             if (Number(t.donation) > 0) L.push('Donation: ' + fmtMoney(t.donation));
@@ -5697,22 +5741,23 @@
         }
 
         function saveWhitePromoSettings() {
-            const pct = parseFloat(document.getElementById('whitePromoPercent').value);
-            if (!isFinite(pct) || pct <= 0 || pct > 100) { alert('The discount must be between 1 and 100 percent.'); return; }
+            const pair = parseFloat(document.getElementById('whitePromoPercent').value);
+            if (!isFinite(pair) || pair <= 0) { alert('Please enter the price for 2 white mugs (for example 25.20).'); return; }
+            const pct = (storeState.whitePromo && storeState.whitePromo.percent) || 50;
             const kw = document.getElementById('whitePromoKeyword').value.trim().toLowerCase();
             if (!kw) { alert('Please write the word that marks the white colors (for example: white).'); return; }
             const old = storeState.whitePromo || {};
             const sp = parseFloat(document.getElementById('whitePromoSingle').value);
             if (!isFinite(sp) || sp <= 0) { alert('Please enter the price of a single white mug (for example 14.99).'); return; }
-            storeState.whitePromo = { percent: Math.round(pct * 100) / 100, keyword: kw.slice(0, 40), stackBulk: !!old.stackBulk, singlePrice: Math.round(sp * 100) / 100 };
+            storeState.whitePromo = { percent: Math.round(pct * 100) / 100, keyword: kw.slice(0, 40), stackBulk: !!old.stackBulk, singlePrice: Math.round(sp * 100) / 100, pairPrice: Math.round(pair * 100) / 100 };
             saveStoreState(storeState);
             alert('Saved.');
         }
         function syncWhitePromoFields() {
             const w = storeState.whitePromo || { percent: 50, keyword: 'white' };
             const a = document.getElementById('whitePromoPercent'), k = document.getElementById('whitePromoKeyword');
-            const sg = document.getElementById('whitePromoSingle'); if (sg) sg.value = (w.singlePrice > 0 ? w.singlePrice : 14.99);
-            if (a) a.value = w.percent;
+            const sg = document.getElementById('whitePromoSingle'); if (sg) sg.value = (w.singlePrice > 0 ? w.singlePrice : 14.90);
+            if (a) a.value = (w.pairPrice > 0 ? w.pairPrice : 25.20);
             if (k) k.value = w.keyword || 'white';
         }
         // one row per country: name | price for additional mug | apply offer | free delivery
