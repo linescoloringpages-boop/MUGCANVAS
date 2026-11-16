@@ -80,6 +80,15 @@
         .dl-tr { right: 0; top: 0; transform: translate(50%, -50%); cursor: nesw-resize; }
         .dl-bl { left: 0; bottom: 0; transform: translate(-50%, 50%); cursor: nesw-resize; }
         .dl-br { right: 0; bottom: 0; transform: translate(50%, 50%); cursor: nwse-resize; }
+    .hero-mug { container-type: inline-size; }
+    .hm-art { position: absolute; top: 53%; width: 30%; transform: translate(-50%, -50%); pointer-events: none; }
+    .hero-mug[data-side="right"] .hm-art { left: 43%; }
+    .hero-mug[data-side="left"] .hm-art { left: 57%; }
+    .hm-art-a, .hm-art-b { position: absolute; left: 0; top: 50%; width: 100%; transform: translateY(-50%) scaleX(.92); text-align: center; opacity: 0; transition: opacity 1.8s ease-in-out; mix-blend-mode: multiply; line-height: 1.05; }
+    .hm-art svg { width: 78%; height: auto; display: block; margin: 0 auto; }
+    .hm-art .t1 { font-weight: 800; letter-spacing: .08em; font-size: 7.2cqw; font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
+    .hm-art .t2 { font-weight: 700; font-style: italic; font-size: 9cqw; font-family: Georgia, 'Times New Roman', serif; }
+    .hm-art .t3 { font-weight: 700; font-size: 5.4cqw; letter-spacing: .14em; text-transform: uppercase; font-family: 'Plus Jakarta Sans', Arial, sans-serif; }
     .hero-mug img { mix-blend-mode: multiply; transition: opacity 1.8s ease-in-out; object-fit: contain; }
     </style>
 </head>
@@ -133,10 +142,14 @@
             </div>
             <div class="relative">
                 <div class="absolute inset-0 -z-0 rounded-[2.5rem] bg-gradient-to-br from-rose-50 via-white to-orange-50 border border-gray-100"></div>
+                <div id="heroBadge" class="hidden absolute -top-5 right-2 sm:right-4 z-10 rotate-6 bg-gradient-to-r from-rose-600 to-orange-500 text-white rounded-2xl shadow-xl px-4 py-2 text-center leading-tight">
+                    <div id="heroBadgePct" class="text-2xl sm:text-3xl font-extrabold">50% OFF</div>
+                    <div class="text-[11px] sm:text-xs font-bold uppercase tracking-wider">on white mugs</div>
+                </div>
                 <div class="relative grid grid-cols-3 gap-2 sm:gap-4 p-4 sm:p-8 items-end" id="heroMugs">
-                    <div class="hero-mug relative w-full aspect-square" data-side="right"><img src="mugs/blue-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
-                    <div class="hero-mug relative w-full aspect-square" style="top:-1.75rem" data-side="right"><img src="mugs/yellow-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
-                    <div class="hero-mug relative w-full aspect-square" data-side="left"><img src="mugs/green-11-left.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"></div>
+                    <div class="hero-mug relative w-full aspect-square" data-side="right"><img src="mugs/blue-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"><div class="hm-art" aria-hidden="true"><div class="hm-art-a"></div><div class="hm-art-b"></div></div></div>
+                    <div class="hero-mug relative w-full aspect-square" style="top:-1.75rem" data-side="right"><img src="mugs/yellow-11-right.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"><div class="hm-art" aria-hidden="true"><div class="hm-art-a"></div><div class="hm-art-b"></div></div></div>
+                    <div class="hero-mug relative w-full aspect-square" data-side="left"><img src="mugs/green-11-left.jpg" alt="Custom mug" class="hm-a absolute inset-0 w-full h-full" loading="eager"><img alt="" class="hm-b absolute inset-0 w-full h-full" style="opacity:0"><div class="hm-art" aria-hidden="true"><div class="hm-art-a"></div><div class="hm-art-b"></div></div></div>
                 </div>
             </div>
         </section>
@@ -287,6 +300,25 @@
         </div>
     </section>
 
+
+    <!-- Legal pages (Privacy Policy and Terms of Service) -->
+    <div id="legalModal" class="fixed inset-0 z-[80] bg-black/60 backdrop-blur-sm hidden overflow-y-auto py-8 px-4" onclick="if(event.target===this)closeLegal()">
+        <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-2xl">
+            <div class="sticky top-0 bg-white rounded-t-3xl border-b border-gray-200 px-6 py-4 flex items-center justify-between gap-3">
+                <h2 id="legalTitle" class="text-xl font-extrabold text-gray-900"></h2>
+                <div class="flex items-center gap-2">
+                    <button onclick="openLegal('privacy')" id="legalTabPrivacy" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-gray-300">Privacy Policy</button>
+                    <button onclick="openLegal('terms')" id="legalTabTerms" class="px-3 py-1.5 rounded-xl text-xs font-bold border border-gray-300">Terms of Service</button>
+                    <button onclick="closeLegal()" class="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 font-bold" aria-label="Close">✕</button>
+                </div>
+            </div>
+            <div class="px-6 py-6">
+                <div id="legal_privacy" class="hidden"><p class="text-xs text-gray-500 mb-4">Last updated: November 16, 2026</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">1. Who we are</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">MugCanvas ("we", "us", "our") runs this website, where you can design and order custom printed mugs (the "Site"). This Privacy Policy explains what personal information we collect, how we use it, who we share it with, and the choices you have. By using the Site or placing an order you agree to this policy.</p><p class="text-sm text-gray-700 leading-relaxed mb-2">Contact for privacy questions: <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a>.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">2. Information we collect</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li><b>Order and contact details:</b> your name, email address, phone number and shipping address, and the details of your order.</li><li><b>Your designs and uploads:</b> the pictures, text and layouts you upload or create in the design tool, and the preview images generated from them.</li><li><b>Payment information:</b> payments are handled by PayPal or by the cryptocurrency payment options shown at checkout. We do not receive or store your card number or PayPal password. We receive the payment confirmation, the amount, the transaction ID and, for PayPal, the payer details PayPal shares with us.</li><li><b>Reviews you submit:</b> your name, review text and any photos you choose to add.</li><li><b>Messages:</b> anything you send us by email, including photos of a problem with an order.</li><li><b>Basic technical data:</b> your browser stores your cart and drafts on your own device (local storage) so the Site works. Our hosting and service providers may log technical data such as IP address, browser type and the time of requests for security and operation.</li></ul><p class="text-sm text-gray-700 leading-relaxed mb-2">We do not knowingly collect information about children under 16, and the Site is not directed at them.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">3. How we use your information</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li>To process, print, pack and ship your order, and to take payment.</li><li>To email you about your order, such as confirmation, approval, tracking and any question about your design.</li><li>To provide customer support and handle problems, replacements and refunds.</li><li>To prevent fraud, abuse and misuse, and to keep the Site secure.</li><li>To keep records and meet legal, tax and accounting obligations.</li><li>To publish your review on the Site if you submit one.</li></ul><p class="text-sm text-gray-700 leading-relaxed mb-2">We do not sell your personal information. We do not use your uploaded designs for advertising or show them to other customers without your permission.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">4. Who we share it with</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">We share information only as needed to run the Site and fulfil your order, with these kinds of service providers:</p><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li><b>Hosting and database:</b> our website host (Netlify) and our database and file storage provider (Supabase), which store the Site, orders, settings and uploaded designs.</li><li><b>Payments:</b> PayPal, or the cryptocurrency payment option you choose.</li><li><b>Email and forms:</b> our email and form delivery services (such as Web3Forms and Gmail), which carry order notifications and messages to you.</li><li><b>Printing and shipping:</b> printing, packing and delivery partners and carriers, who receive your name, address, phone number and the design to be printed.</li><li><b>Authorities and professional advisers:</b> when the law requires it, or to protect our rights, or to our legal and accounting advisers.</li></ul><p class="text-sm text-gray-700 leading-relaxed mb-2">These providers may process data in countries other than yours, including the United States. We use providers that apply reasonable safeguards, but no internet service can be guaranteed to be completely secure.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">5. How long we keep it</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">We keep order information, designs and related messages for as long as needed to fulfil the order, provide support and warranty handling, resolve disputes and meet legal and tax requirements, and then delete or anonymize it when it is no longer needed.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">6. Your choices and rights</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">Depending on where you live (for example under the GDPR in the European Economic Area and the UK, or the CCPA/CPRA in California), you may have the right to ask us to access, correct, delete or export your personal information, to object to or restrict some processing, and to withdraw consent where we rely on it. To use these rights, email <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a> from the address you used to order. We may need to verify your identity, and we may keep information we are legally required to keep, or that we need to handle an open order or dispute. You can also complain to your local data protection authority.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">7. Cookies and similar technologies</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">The Site uses your browser's local storage to remember your cart and settings. At the time of writing we do not use advertising or tracking cookies. Our payment provider may set its own cookies when you use its checkout. If we add analytics or advertising tools in the future, we will update this policy and, where required, ask for your consent.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">8. Security</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">We use reasonable technical and organizational measures to protect your information, including encrypted connections (HTTPS) and access controls on our database. No method of transmission or storage is completely secure, so we cannot guarantee absolute security.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">9. Changes to this policy</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">We may update this policy from time to time. The "Last updated" date above shows the latest version. Continuing to use the Site after a change means you accept the updated policy.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">10. Contact</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">Questions about this policy or your data: <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a>.</p></div>
+                <div id="legal_terms" class="hidden"><p class="text-xs text-gray-500 mb-4">Last updated: November 16, 2026</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">1. Agreement</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">These Terms of Service ("Terms") govern your use of the MugCanvas website and your purchases from us. By using the Site or placing an order you confirm that you have read and accept these Terms and our Privacy Policy. If you do not agree, please do not use the Site or place an order. You must be at least 18 years old, or have the permission of a parent or guardian, to place an order.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">2. Custom-made products</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">Every mug is made to order from the design you create. Because it is personalized, it is made specifically for you and cannot be resold. This is why the return rules in section 8 apply.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">3. Your designs and uploaded content</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li>You are fully responsible for everything you upload or type, including images, logos, names and text, and for checking spelling, content and placement before you order. We print what you submit.</li><li>You confirm that you own the content or have all rights and permissions needed to use it and to have it printed (including copyright, trademark, and the rights of any person shown in a photo).</li><li>You must not submit content that is unlawful, infringing, hateful, harassing, sexually explicit, defamatory, or that violates the rights of others. This includes copyrighted characters, brands and logos you do not have permission to use.</li><li>You give us a limited, non-exclusive licence to store, reproduce and process your content only to make, print, show you a preview of and deliver your order, and to handle support and legal claims.</li><li>We may refuse, pause or cancel any order whose content we believe breaks these rules or the law. In that case we will refund the amount paid for that order.</li><li>You agree to compensate us for any claim, loss or cost arising from content you submit that infringes the rights of others or breaks the law.</li></ul><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">4. Previews and print results</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li>The on-screen preview shows an approximation of how your design will look. Colors can look different on screen and in print, and the exact position, size and edge of the print can vary slightly. Small variations like these are normal and are not defects.</li><li>The sharpness of the print depends on the quality of the image you upload. Low-resolution or blurry images will print low quality, and we are not responsible for that.</li><li>By adding your design to the cart and paying, you approve the design as shown.</li></ul><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">5. Orders, prices and payment</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li>Prices are shown in US dollars unless stated otherwise. Promotions and discounts apply only as described on the Site at the time of order and may be changed or ended at any time.</li><li>Placing an order is an offer to buy. An order is accepted when we confirm it. We may decline or cancel an order, for example because of a pricing or availability error, a suspected fraud, or a content problem, and we will refund any payment for an order we cancel.</li><li>Shipping costs are shown at checkout. You are responsible for any import duties, customs fees and local taxes in your country, unless the Site says they are included.</li><li>Payments are processed by PayPal or by the cryptocurrency option you choose. Cryptocurrency transfers are final and cannot be reversed by us, and you are responsible for the correct amount, network, wallet address and any network fees.</li><li>Please contact us first if you have a problem with your order, before you open a payment dispute or chargeback. We resolve legitimate problems quickly.</li></ul><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">6. Production, shipping and delivery</h3><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li>Orders are printed to order. Production, packing and delivery times shown on the Site are estimates, not guarantees.</li><li>You are responsible for giving a complete and correct shipping address and phone number. We are not responsible for failed or lost deliveries, extra shipping costs, or delay caused by a wrong or incomplete address, and a package returned because of a wrong address may be re-shipped only at your cost.</li><li>Delivery times can be affected by carriers, customs, holidays and events outside our control, and we are not liable for such delays.</li><li>Risk of loss or damage passes to you when the package is handed to the carrier, except for the broken-in-transit case in section 8.</li></ul><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">7. Cancellations and changes</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">Because production starts quickly, you can request to change or cancel an order only by emailing us right away at <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a> with your order number, and only if we have not yet started printing it. Once printing has started, the order cannot be changed or cancelled.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">8. Returns, refunds and replacements</h3><p class="text-sm text-gray-700 leading-relaxed mb-2"><b>All sales of custom mugs are final. We do not accept returns or give refunds or exchanges for change of mind, ordering the wrong color or size, mistakes in your design or text, image quality that matches what you uploaded, slight differences between the preview and the printed result, or any other reason, except in the two cases below.</b></p><ul class="list-disc pl-5 space-y-1 text-sm text-gray-700 leading-relaxed"><li><b>Broken or damaged in transit:</b> the mug arrived broken or cracked.</li><li><b>Defect:</b> the mug has a manufacturing or printing defect, such as a print that is clearly missing, smeared or badly misprinted compared to your approved design, or a damaged or faulty mug.</li></ul><p class="text-sm text-gray-700 leading-relaxed mb-2">In these cases we will review whether a refund or replacement is possible. To be considered, you must email <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a> within <b>7 days of delivery</b> with your order number and clear photos of the mug, the damage or defect, and the packaging. We may ask for more information. If we confirm the problem, we will, at our choice, send a replacement or refund the amount you paid for the affected mug. Our decision on whether the case qualifies is made after the review. You must keep the packaging until the claim is closed. We may ask you to return the mug at our cost, or to dispose of it.</p><p class="text-sm text-gray-700 leading-relaxed mb-2">Shipping costs are not refunded, except where the law requires it. Nothing in this section limits any right you have by law that cannot be excluded.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">9. Care of your mug</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">To make the print last, we recommend gentle washing and avoiding abrasive scrubbing. Do not use a mug that is chipped or cracked. Allow hot drinks to cool before use, and take care when handling hot mugs. Microwave and dishwasher suitability may vary, and damage caused by misuse or normal wear is not a defect.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">10. Intellectual property</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">The Site, its design, text, graphics, logos, software and the MugCanvas name are owned by us or our licensors and are protected by law. You may not copy, scrape, reproduce or reuse them without our written permission, except for your own personal use of the Site as intended. The designs you create belong to you or your licensors as described in section 3.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">11. Acceptable use</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">You agree not to misuse the Site: for example by trying to break, overload or gain unauthorized access to it or its data, using automated tools to scrape it, submitting false or fraudulent orders or payment information, or using it for anything unlawful.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">12. Disclaimers</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">The Site and our products are provided "as is" and "as available". To the fullest extent the law allows, we do not make any warranty other than those stated in these Terms, including any implied warranty of merchantability or fitness for a particular purpose, and we do not guarantee that the Site will be uninterrupted or error free.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">13. Limitation of liability</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">To the fullest extent permitted by law, we are not liable for any indirect, incidental, special, consequential or punitive loss, or for loss of profits, data or goodwill, arising from your use of the Site or our products. Our total liability for any claim relating to an order is limited to the amount you paid for that order. Nothing in these Terms excludes or limits liability that cannot be excluded or limited by law, including liability for fraud, or any mandatory consumer rights in your country.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">14. Governing law and disputes</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">These Terms are governed by the laws of the country in which the operator of MugCanvas is established, without regard to conflict-of-law rules, and the courts of that country will have jurisdiction, unless mandatory consumer protection law in your country gives you the right to bring a claim elsewhere. Before starting any formal claim, please contact us so that we can try to resolve the problem informally.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">15. Changes</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">We may update these Terms from time to time. The version in force when you place an order applies to that order. The "Last updated" date above shows the latest version.</p><h3 class="text-base font-extrabold text-gray-900 mt-6 mb-2">16. Contact</h3><p class="text-sm text-gray-700 leading-relaxed mb-2">MugCanvas, email: <a class="legalEmail underline font-bold text-rose-700" href="mailto:"></a>.</p></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-12 border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -295,7 +327,13 @@
                 <p class="text-[11px] font-bold uppercase tracking-wider text-gray-500">Contact us</p>
                 <a id="contactEmailLink" href="mailto:" class="text-sm font-bold text-white hover:text-rose-300 underline break-all"></a>
             </div>
-            <p id="txt_footer" class="text-sm text-gray-400">© 2026 MugCanvas. All rights reserved.</p>
+            <div class="text-center sm:text-right space-y-1">
+                <div class="flex items-center justify-center sm:justify-end gap-4 text-sm font-bold">
+                    <a href="#privacy" onclick="openLegal('privacy');return false;" class="text-gray-300 hover:text-white underline">Privacy Policy</a>
+                    <a href="#terms" onclick="openLegal('terms');return false;" class="text-gray-300 hover:text-white underline">Terms of Service</a>
+                </div>
+                <p id="txt_footer" class="text-sm text-gray-400">© 2026 MugCanvas. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
@@ -387,7 +425,11 @@
                     <textarea id="chkFullAddress" rows="3" maxlength="500" dir="auto" autocomplete="off" placeholder="Write your complete address exactly as it should appear on the package: street and number, apartment / floor / entrance, city, state / province, ZIP / postal code and country." class="w-full px-4 py-3 rounded-2xl border border-gray-300 outline-none text-sm font-medium bg-white resize-y"></textarea>
                     <p class="text-[11px] text-gray-400 mt-1">Typing your full address here helps us avoid delivery mistakes.</p>
                 </div>
-                <div class="pt-4">
+                <label class="flex items-start gap-2 text-xs text-gray-700 cursor-pointer pt-2">
+                    <input type="checkbox" id="chkAgreeTerms" class="mt-0.5 w-4 h-4 shrink-0">
+                    <span>I have read and agree to the <a href="#terms" onclick="openLegal('terms');return false;" class="underline font-bold text-rose-700">Terms of Service</a> and the <a href="#privacy" onclick="openLegal('privacy');return false;" class="underline font-bold text-rose-700">Privacy Policy</a>. I understand that my mug is custom made and cannot be returned or refunded, except if it arrives broken or defective (see the Terms).</span>
+                </label>
+                <div class="pt-2">
                     <button onclick="goToPaymentStep()" class="w-full py-4 rounded-2xl text-base font-extrabold text-white bg-rose-600 hover:bg-rose-700 shadow-xl shadow-rose-600/25 transition-all">
                         Proceed to Payment ➔
                     </button>
@@ -1447,8 +1489,8 @@
             { q: 'What pictures work best?', a: 'Sharp, high-resolution pictures give the best print. Photos taken with a modern phone camera are usually great. Avoid screenshots and pictures saved from social media, which are often small and blurry.' },
             { q: 'Will my mug look like the preview?', a: 'The preview shows where your design sits on the mug. The printed colors can be slightly different from your screen, but they are bright, sharp and made to last.' },
             { q: 'How long does delivery take?', a: 'Every mug is printed to order. Printing and packing usually take 2-5 business days, and then the mug is shipped to your address. Delivery time depends on your country, and the shipping options and costs are shown at checkout. You will receive an email confirmation after your order.' },
-            { q: 'Is the print durable?', a: 'Designs are printed with a high-quality sublimation process on ceramic mugs, so the print does not peel or fade with normal use. The mugs are dishwasher and microwave safe.' },
-            { q: 'What happens if there is a problem with my order?', a: 'If your mug arrives damaged, the print is wrong or something else is not right, contact us using the Contact button with your order details and a photo of the problem. We will fix it by sending a replacement or refunding you.' }
+            { q: 'Is the print durable?', a: 'Designs are printed with a high-quality sublimation process on ceramic mugs, so the print does not peel or fade with normal use. To make it last, we recommend gentle washing and avoiding abrasive scrubbing.' },
+            { q: 'What if there is a problem with my order?', a: 'Every mug is custom made for you, so we do not accept returns or give refunds, except if your mug arrives broken or with a defect. If that happens, email us within 7 days of delivery with your order number and clear photos of the mug, the damage and the packaging. We will review it and, if it is confirmed, send a replacement or refund you. Please see our Terms of Service for the full details.' }
         ];
 
         // Mug colors and the mug photos (files in the "mugs" folder next to index.html) that ship with the site.
@@ -2462,6 +2504,30 @@
             document.getElementById('cartDrawer').classList.toggle('hidden');
         }
 
+
+        function openLegal(which) {
+            which = which === 'terms' ? 'terms' : 'privacy';
+            var m = document.getElementById('legalModal'); if (!m) return;
+            ['privacy', 'terms'].forEach(function (k) {
+                document.getElementById('legal_' + k).classList.toggle('hidden', k !== which);
+                var t = document.getElementById('legalTab' + (k === 'terms' ? 'Terms' : 'Privacy'));
+                if (t) t.className = 'px-3 py-1.5 rounded-xl text-xs font-bold border ' + (k === which ? 'bg-rose-600 text-white border-rose-600' : 'border-gray-300 text-gray-700');
+            });
+            document.getElementById('legalTitle').textContent = which === 'terms' ? 'Terms of Service' : 'Privacy Policy';
+            var ce = (storeState.texts && storeState.texts.contactEmail) || '';
+            Array.prototype.forEach.call(document.querySelectorAll('#legalModal .legalEmail'), function (a) { a.textContent = ce; a.href = 'mailto:' + ce; });
+            m.classList.remove('hidden'); m.scrollTop = 0;
+            try { history.replaceState(null, '', '#' + which); } catch (e) {}
+        }
+        function closeLegal() {
+            var m = document.getElementById('legalModal'); if (m) m.classList.add('hidden');
+            try { if (/^#(privacy|terms)$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+        }
+        document.addEventListener('keydown', function (e) {
+            var m = document.getElementById('legalModal');
+            if (e.key === 'Escape' && m && !m.classList.contains('hidden')) { e.stopPropagation(); closeLegal(); }
+        }, true);
+        window.addEventListener('load', function () { if (/^#(privacy|terms)$/.test(location.hash)) openLegal(location.hash.slice(1)); });
         function openCheckout(i) {
             i = (typeof i === 'number') ? i : 0;
             designFilesAvailable().then(ok => {
@@ -2573,6 +2639,8 @@
             const fullAddress = document.getElementById('chkFullAddress').value.trim().slice(0, 500);
             const needState = destinationAsksState(getSelectedDestination());
             const state = needState ? document.getElementById('chkState').value.trim() : '';
+            const agree = document.getElementById('chkAgreeTerms');
+            if (agree && !agree.checked) { alert('Please tick the box to confirm that you agree to the Terms of Service and the Privacy Policy.'); return; }
 
             if (!name || !email || !street || !city) {
                 alert('Please fill in all address and customer details before proceeding to payment.');
@@ -3235,16 +3303,49 @@
         // ---------- opening / closing the page ----------
 
         // The three mugs at the top slowly change color, one at a time, all the time.
+        // A small, delicate design (a flower, a butterfly, a name...) on each mug changes together with the color.
         (function () {
             var COLORS = ['blue', 'pink', 'red', 'orange', 'yellow', 'lightblue', 'maroon', 'lightgreen', 'green', 'cambridgeblue', 'black', 'white'];
+            var INK = { blue: '#2457c5', pink: '#c9507e', red: '#b30f28', orange: '#d9500a', yellow: '#a87c00', lightblue: '#0a7db5', maroon: '#7a1f3d', lightgreen: '#4a922a', green: '#14633b', cambridgeblue: '#4f7f69', black: '#2b2b2b', white: '#555555' };
+            var SW = 'fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"';
+            var DESIGNS = [
+                '<svg viewBox="0 0 100 100" ' + SW + '><circle cx="50" cy="50" r="7"/><circle cx="50" cy="28" r="12"/><circle cx="72" cy="50" r="12"/><circle cx="50" cy="72" r="12"/><circle cx="28" cy="50" r="12"/><path d="M50 84v14"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><path d="M50 52c-6-16-22-30-34-24-8 5-4 20 6 26 8 5 20 4 28-2z"/><path d="M50 52c6-16 22-30 34-24 8 5 4 20-6 26-8 5-20 4-28-2z"/><path d="M50 56c-10 2-22 8-24 20 2 8 14 8 24-6zM50 56c10 2 22 8 24 20-2 8-14 8-24-6z"/><path d="M50 40v34M46 30l4 10 4-10"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><path d="M62 12a38 38 0 1 0 26 60A32 32 0 0 1 62 12z"/><path d="M80 24l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><circle cx="90" cy="52" r="1.5"/><circle cx="74" cy="84" r="1.5"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><path d="M50 84C14 58 10 34 28 24c10-5 18 1 22 9 4-8 12-14 22-9 18 10 14 34-22 60z"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><path d="M50 10l10 26 28 2-22 18 8 28-24-15-24 15 8-28-22-18 28-2z"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><ellipse cx="50" cy="64" rx="17" ry="14"/><ellipse cx="22" cy="42" rx="7" ry="10"/><ellipse cx="40" cy="26" rx="7" ry="10"/><ellipse cx="60" cy="26" rx="7" ry="10"/><ellipse cx="78" cy="42" rx="7" ry="10"/></svg>',
+                '<svg viewBox="0 0 100 100" ' + SW + '><circle cx="50" cy="50" r="14"/><path d="M50 14v10M50 76v10M14 50h10M76 50h10M25 25l7 7M68 68l7 7M75 25l-7 7M32 68l-7 7"/></svg>',
+                '<div class="t1">BEST DAD</div>',
+                '<div class="t2">Noa</div>',
+                '<div class="t2">Maya &amp; Dan</div>',
+                '<div class="t1">COFFEE<br>FIRST</div>',
+                '<div class="t2">Mom</div>',
+                '<div class="t3">Dream big</div>',
+                '<div class="t2">Emma</div>',
+                '<div class="t3">Hello<br>sunshine</div>',
+                '<div class="t1">BEST MOM</div>',
+                '<div class="t2">Love you</div>'
+            ];
             var state = null, tick = 0;
             function src(color, side) { return 'mugs/' + color + '-11-' + side + '.jpg'; }
+            function pickDesign(avoid) {
+                var k, g = 0;
+                do { k = Math.floor(Math.random() * DESIGNS.length); } while (avoid.indexOf(k) >= 0 && g++ < 50);
+                return k;
+            }
+            function paint(layer, k, color) { layer.innerHTML = DESIGNS[k]; layer.style.color = INK[color] || '#444'; }
             function init() {
                 var slots = Array.prototype.slice.call(document.querySelectorAll('#heroMugs .hero-mug'));
                 if (!slots.length) return;
                 state = slots.map(function (el, k) {
                     var a = el.querySelector('.hm-a'), b = el.querySelector('.hm-b');
-                    return { side: el.getAttribute('data-side'), front: a, back: b, idx: (k * 4) % COLORS.length };
+                    return { side: el.getAttribute('data-side'), front: a, back: b, idx: (k * 4) % COLORS.length, artFront: el.querySelector('.hm-art-a'), artBack: el.querySelector('.hm-art-b'), design: -1 };
+                });
+                state.forEach(function (s) {
+                    s.design = pickDesign(state.map(function (o) { return o.design; }));
+                    paint(s.artFront, s.design, COLORS[s.idx]);
+                    s.artFront.style.opacity = '1';
                 });
                 COLORS.forEach(function (c) { new Image().src = src(c, 'right'); new Image().src = src(c, 'left'); });
                 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3262,6 +3363,11 @@
                 im.onload = function () {
                     s.back.src = next; s.back.style.opacity = '1'; s.front.style.opacity = '0';
                     var t = s.front; s.front = s.back; s.back = t;
+                    // the delicate design changes together with the color
+                    s.design = pickDesign(state.map(function (o) { return o.design; }));
+                    paint(s.artBack, s.design, COLORS[s.idx]);
+                    s.artBack.style.opacity = '1'; s.artFront.style.opacity = '0';
+                    var u = s.artFront; s.artFront = s.artBack; s.artBack = u;
                 };
                 im.src = next;
             }
@@ -3275,10 +3381,18 @@
                     box.innerHTML = cols.slice(0, 12).map(c => '<span title="' + escapeHtml(c.name) + '" class="inline-block w-6 h-6 rounded-full border-2 border-white shadow ring-1 ring-gray-300" style="background:' + escapeHtml(c.swatch) + '"></span>').join('');
                     if (cols.length > 12) box.insertAdjacentHTML('beforeend', '<span class="text-xs font-bold text-gray-500 self-center">+' + (cols.length - 12) + '</span>');
                 }
+                const bd = document.getElementById('heroBadge');
+                if (bd) {
+                    const w0 = storeState.whitePromo || {};
+                    const full = designerEnabled() ? designerPrice('11') : 0;
+                    const off = full > 0 ? Math.round((1 - Number(w0.singlePrice > 0 ? w0.singlePrice : 14.90) / full) * 100) : 0;
+                    bd.classList.toggle('hidden', !(off >= 5));
+                    const bp = document.getElementById('heroBadgePct'); if (bp) bp.textContent = off + '% OFF';
+                }
                 const pr = document.getElementById('heroPrice');
                 if (pr) {
                     const w = storeState.whitePromo || {};
-                    pr.textContent = designerEnabled() ? ('From $' + Number(w.singlePrice > 0 ? w.singlePrice : 14.90).toFixed(2) + ' · ' + whiteDealText() + ' · 11 oz & 15 oz') : '';
+                    pr.textContent = designerEnabled() ? ('From $' + Number(w.singlePrice > 0 ? w.singlePrice : 14.90).toFixed(2) + ' · 11 oz & 15 oz') : '';
                 }
             } catch (e) { /* the page works without it */ }
         }
@@ -5132,9 +5246,11 @@
             var mail = buildOrderUpdateEmail(o, f);
             return { to: String((o.customer && o.customer.email) || ''), su: mail.subject, body: mail.text };
         }
+        // The Gmail account the emails to customers are written from (it must be signed in to Gmail in this browser)
+        const ORDER_MAIL_FROM = 'linescoloringpages@gmail.com';
         function openOrderEmailInGmail(id) {
             var m = oeComposeLinks(id); if (!m) return;
-            window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(m.to) + '&su=' + encodeURIComponent(m.su) + '&body=' + encodeURIComponent(m.body), '_blank');
+            window.open('https://mail.google.com/mail/?authuser=' + encodeURIComponent(ORDER_MAIL_FROM) + '&view=cm&fs=1&to=' + encodeURIComponent(m.to) + '&su=' + encodeURIComponent(m.su) + '&body=' + encodeURIComponent(m.body), '_blank');
         }
         function openOrderEmailInApp(id) {
             var m = oeComposeLinks(id); if (!m) return;
